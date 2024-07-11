@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"] {
+            width: calc(100% - 12px);
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        select {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Registration Form</h2>
+        <form id="registrationForm" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="fullname">Full Name:</label>
+                <input type="text" id="fullname" name="fullname">
+                <p class="error-message" id="fullnameError"></p>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" placeholder="Enter Email" id="email" name="email">
+                <p class="error-message" id="emailError"></p>
+            </div>
+            <div class="form-group">
+                <label for="country">Country:</label>
+                <select id="country" name="country">
+          <option value="IN">India (+91)</option>
+          <option value="US">United States (+1)</option>
+          <option value="UK">United Kingdom (+44)</option>
+          <!-- Add more options as needed -->
+        </select>
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile Number:</label>
+                <input type="tel" id="mobile" name="mobile">
+                <p class="error-message" id="mobileError"></p>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password">
+                <p class="error-message" id="passwordError"></p>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword">
+                <p class="error-message" id="confirmPasswordError"></p>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Register">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function validateForm() {
+            var fullname = document.getElementById('fullname').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var country = document.getElementById('country').value;
+            var mobile = document.getElementById('mobile').value.trim();
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+
+            var fullnameError = document.getElementById('fullnameError');
+            var emailError = document.getElementById('emailError');
+            var mobileError = document.getElementById('mobileError');
+            var passwordError = document.getElementById('passwordError');
+            var confirmPasswordError = document.getElementById('confirmPasswordError');
+
+            // Reset error messages
+            fullnameError.textContent = '';
+            emailError.textContent = '';
+            mobileError.textContent = '';
+            passwordError.textContent = '';
+            confirmPasswordError.textContent = '';
+
+            var isValid = true;
+
+            // Full Name validation
+            if (fullname === '') {
+                fullnameError.textContent = 'Full Name is required';
+                isValid = false;
+            }
+
+            // Email validation
+            if (email === '') {
+                emailError.textContent = 'Email is required';
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                emailError.textContent = 'Invalid email format';
+                isValid = false;
+            }
+
+            // Mobile Number validation
+            if (mobile === '') {
+                mobileError.textContent = 'Mobile Number is required';
+                isValid = false;
+            } else if (!isValidMobile(country, mobile)) {
+                mobileError.textContent = 'Invalid mobile number format';
+                isValid = false;
+            }
+
+            // Password validation
+            if (password === '') {
+                passwordError.textContent = 'Password is required';
+                isValid = false;
+            } else if (password.length < 6) {
+                passwordError.textContent = 'Password must be at least 6 characters long';
+                isValid = false;
+            }
+
+            // Confirm Password validation
+            if (confirmPassword === '') {
+                confirmPasswordError.textContent = 'Please confirm your password';
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                confirmPasswordError.textContent = 'Passwords do not match';
+                isValid = false;
+            }
+
+            // If form is valid, submit the form (for demo, alerting instead)
+            if (isValid) {
+                alert('Registration Successful!\n\nFull Name: ' + fullname + '\nEmail: ' + email + '\nCountry: ' + country + '\nMobile: ' + mobile);
+                document.getElementById('registrationForm').reset(); // Reset form
+            }
+
+            return false; // Prevent default form submission
+        }
+
+        // Function to validate email format
+        function isValidEmail(email) {
+            var re = /\S+@\S+\.\S+/;
+            return re.test(email);
+        }
+
+        // Function to validate mobile number format based on country code
+        function isValidMobile(country, mobile) {
+            switch (country) {
+                case 'IN': // India (+91)
+                    var re = /^[789]\d{9}$/;
+                    return re.test(mobile);
+                case 'US': // United States (+1)
+                    var reUS = /^\d{10}$/;
+                    return reUS.test(mobile);
+                case 'UK': // United Kingdom (+44)
+                    var reUK = /^\d{10}$/;
+                    return reUK.test(mobile);
+                default:
+                    return false;
+            }
+        }
+    </script>
+</body>
+
+</html>
